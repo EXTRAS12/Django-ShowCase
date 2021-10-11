@@ -1,0 +1,35 @@
+
+{% block section %}
+ <section class="py-5">
+
+   <div class="justify-content-center row text-center text-lg-left">
+     {% for item in products %}
+<div class="col-lg-3 col-md-6 col-12 thumb mb-5">
+<div class="border">
+  <div class="wrap">
+    <div class="product-wrap">
+        {% if item.image %}
+      <a href=""><img src="{{ MEDIA_URL }}{{ item.image.url}}"></a>
+        {% endif %}
+    </div>
+    <div class="loop-action">
+      <a href="{{ item.get_absolute_url }}" class="add-to-cart">Описание товара</a>
+      <a href="" class="loop-add-to-cart">Сделать заказ</a>
+    </div>
+  </div>
+    <div class="product-info">
+      <div class="stars"></div>
+      <h3 class="product-title text-white">{{ item.name }}</h3>
+      <div class="price text-white">&#8381; {{ item.price }}</div>
+        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+            <div class="text-center"><a class="btn btn-danger mt-2" href="#">Сделать заказ</a></div>
+
+        </div>
+    </div>
+</div>
+
+</div>
+{% endfor %}
+   </div>
+        </section>
+{% endblock section %}
