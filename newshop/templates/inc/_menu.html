@@ -1,0 +1,16 @@
+{% block menu %}
+<input type="checkbox" id="active">
+<label for="active" class="menu-btn"><i class="fas fa-bars"></i></label>
+<div class="wrapper">
+    <ul>
+        <li><a href="/" style="color: #e50914;  font-weight: bold;">Главная</a></li>
+        <li><a href="{% url 'contacts' %}" style="color: #e50914;  font-weight: bold;">Контакты</a></li>
+
+        {% for item in categories %}
+        <li><a href="{{ item.get_absolute_url }}">{{ item.name }}</a></li>
+        {% endfor %}
+
+
+    </ul>
+</div>
+{% endblock %}

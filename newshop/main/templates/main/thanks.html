@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block header %}
+<header class="py-5">
+
+<div id="carouselExampleDark" class="carousel slide" data-bs-ride="carousel">
+
+  <div class="carousel-inner">
+        <div class="carousel-item active">
+         <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <h1 class="display-4 fw-bolder">Спасибо за заказ!</h1>
+                     <p class="lead fw-normal text-white-50 mt-5"><span style="color: #e50914;">Важно:</span> Оплата заказа при получении</p>
+                </div>
+            </div>
+    </div>
+  </div>
+
+</div>
+
+</header>
+{% endblock %}
+{% block section %}
+<header class="py-5">
+
+<div id="" class="carousel slide" data-bs-ride="carousel">
+
+  <div class="carousel-inner">
+        <div class="carousel-item active">
+         <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <p class="lead fw-normal text-white-50 mb-0">Если у вас есть вопросы:</p>
+                   <a href="{% url 'contacts' %}"><p class="lead fw-normal text-white-50 mb-0">Связаться</p></a>
+
+                </div>
+            </div>
+    </div>
+  </div>
+
+</div>
+
+</header>
+{% endblock %}

@@ -1,0 +1,57 @@
+ {% load widget_tweaks %}
+ <div class="modal fade" id="exampleModal{{item.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">{{ item.name }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+      </div>
+      <div class="modal-body">
+
+        <div class="container text-center">
+    <div id="form_container">
+  <form method="post" class="row g-3">
+        {% csrf_token %}
+
+<div class="col-md-12">
+    <label class="form-label">Ф. И. О.</label>
+     {{ form.name|add_class:"form-control" }}
+    {{ form.name.errors }}
+  </div>
+         <div class="col-md-12">
+    <label class="form-label">Номер телефона:</label>
+    {{ form.phone|add_class:"form-control" }}
+    {{ form.phone.errors }}
+  </div>
+         <div class="col-md-6">
+    <label class="form-label">Область:</label>
+    {{ form.area|add_class:"form-control" }}
+    {{ form.area.errors }}
+  </div>
+         <div class="col-md-6">
+    <label class="form-label">Город:</label>
+    {{ form.city|add_class:"form-control" }}
+    {{ form.city.errors }}
+  </div>
+         <div class="col-12">
+    <label class="form-label">Адрес:</label>
+    {{ form.adres|add_class:"form-control" }}
+    {{ form.adres.errors }}
+  </div>
+          <div class="col-md-12">
+         <input class="form-control" name="prodname" type="text" value="{{ item.category }}: {{ item.name }}" aria-label="имя товара" readonly>
+         </div>
+         <div class="form-actions form-group">
+          <button type="submit" class="form-control btn btn-danger">Заказать</button>
+        </div>
+      </form>
+            </div>
+  </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+
+      </div>
+    </div>
+  </div>
+</div>

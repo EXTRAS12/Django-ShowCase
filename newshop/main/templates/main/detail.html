@@ -1,5 +1,46 @@
 {% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title %} Просмотр товара {% endblock title %}
+{% block header %}
+<header class="py-5" style="">
 
+
+<div id="carouselExampleDark" class="carousel slide" data-bs-ride="carousel">
+
+  <div class="carousel-inner">
+        <div class="carousel-item active" data-bs-interval="5000">
+         <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                     <h1 class="display-4 fw-bolder">MOONSHINE</h1>
+                   <p class="lead fw-normal text-white-50 mb-0">Магазин бижутерии с богатым выбором уникальных товаров</p>
+                     <p class="lead fw-normal text-white-50 mt-5"><span style="color: #e50914;">Важно:</span> Оплата заказа при получении</p>
+                </div>
+            </div>
+    </div>
+    <div class="carousel-item" data-bs-interval="2000">
+     <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                      <h1 class="display-4 fw-bolder">MOONSHINE</h1>
+                    <p class="lead fw-normal text-white-50 mb-0">Наши товары подходят всем</p>
+                     <p class="lead fw-normal text-white-50 mt-5"><span style="color: #e50914;">Важно:</span> Оплата заказа при получении</p>
+                </div>
+            </div>
+    </div>
+    <div class="carousel-item" data-bs-interval="2000">
+      <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                      <h1 class="display-4 fw-bolder">MOONSHINE</h1>
+                    <p class="lead fw-normal text-white-50 mb-0">Каждый найдет что-то для себя</p>
+                     <p class="lead fw-normal text-white-50 mt-5"><span style="color: #e50914;">Важно:</span> Оплата заказа при получении</p>
+                </div>
+            </div>
+    </div>
+  </div>
+
+</div>
+
+</header>
+{% endblock header %}
 {% block section %}
 <section class="py-5">
             <div class="container px-4 px-lg-5 my-5">
@@ -15,20 +56,74 @@
                         <div class="small mb-1 text-white">{{ product.category }}</div>
                         <h1 class="display-5 fw-bolder text-white">{{ product.name }}</h1>
                         <div class="fs-5 mb-5">
-                            <span class="text-decoration-line-through">$45.00</span>
-                            <span class="text-white">{{ product.price }} руб</span>
+                            <span class="text-decoration-line-through" style="color: #808080;">{{ product.stock }} руб</span>
+                            <span class="price text-white">{{ product.price }} руб</span>
                         </div>
                         <p class="lead text-white">{{ product.description }}</p>
                         <div class="d-flex">
 
-                            <button class="btn btn-danger flex-shrink-0" type="button">
-
-                                Сделать заказ
-                            </button>
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal{{ product.id }}">Сделать заказ</button>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+     <!-- Модальное окно -->
+<div class="modal fade" id="exampleModal{{ product.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">{{ product.name }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+      </div>
+      <div class="modal-body">
+
+        <div class="container text-center">
+    <div id="form_container">
+      <form method="post" class="row g-3">
+        {% csrf_token %}
+
+<div class="col-md-12">
+    <label class="form-label">Ф. И. О.</label>
+     {{ form.name|add_class:"form-control" }}
+    {{ form.name.errors }}
+  </div>
+         <div class="col-md-12">
+    <label class="form-label">Номер телефона:</label>
+    {{ form.phone|add_class:"form-control" }}
+    {{ form.phone.errors }}
+  </div>
+         <div class="col-md-6">
+    <label class="form-label">Область:</label>
+    {{ form.area|add_class:"form-control" }}
+    {{ form.area.errors }}
+  </div>
+         <div class="col-md-6">
+    <label class="form-label">Город:</label>
+    {{ form.city|add_class:"form-control" }}
+    {{ form.city.errors }}
+  </div>
+         <div class="col-12">
+    <label class="form-label">Адрес:</label>
+    {{ form.adres|add_class:"form-control" }}
+    {{ form.adres.errors }}
+  </div>
+          <div class="col-md-12">
+         <input class="form-control" name="prodname" type="text" value="{{ product.category }}: {{ product.name }}" aria-label="имя товара" readonly>
+         </div>
+         <div class="form-actions form-group">
+          <button type="submit" class="form-control btn btn-danger">Заказать</button>
+        </div>
+      </form>
+    </div>
+  </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 

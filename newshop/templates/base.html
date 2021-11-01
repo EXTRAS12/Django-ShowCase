@@ -1,4 +1,7 @@
+{% load widget_tweaks %}
 {% load static %}
+{% load cache %}
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -7,39 +10,64 @@
         <meta name="description" content="" />
         <meta name="author" content="" />
 
-        <title>{% block title %} {{ title }} {% endblock title %}</title>
+        <title>{% block title %} Главная страница {% endblock title %}</title>
 
         <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
         <!-- Bootstrap icons-->
         <link href="https://fonts.googleapis.com/css?family=Quicksand:400,600,700&display=swap" rel="stylesheet">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
-        <link rel="stylesheet" href="{% static 'fonts/icomoon/style.css' %}">
-        <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
-        <!-- Core theme CSS (includes Bootstrap)-->
+
+
+              <!-- Core theme CSS (includes Bootstrap)-->
         <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
         <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 
-
     </head>
     <body>
+        {% block preloader %}
+        {% include 'inc/_preloader.html' %}
+        {% endblock %}
         <!-- Navigation-->
 
-      {% include 'inc/_nav.html' %}
+        {% block menu %}
+        {% include 'inc/_menu.html' %}
+        {% endblock menu %}
 
+        {% cache 500 nav %}
+        {% block nav %}
+      {% include 'inc/_nav.html' %}
+        {% endblock nav %}
+        {% endcache %}
         <!-- Header-->
+        {% block header %}
+         {% cache 500 header %}
         {% include 'inc/_header.html' %}
-<!--        <hr class="hr-shelf">-->
+        {% endcache %}
+        {% endblock header %}
+
         <!-- Section-->
         {% block section %}
        {% include 'main/card.html' %}
-
         {% endblock section %}
         <!-- Footer-->
+        <hr>
+        {% cache 500 footer %}
+        {% block footer %}
         {% include 'inc/_footer.html' %}
-        <!-- Bootstrap core JS-->
+        {% endblock %}
+        {% endcache %}
+
+{% for item in products %}
+        <!-- Модальное окно -->
+
+        {% block order %}
+    {% include 'main/order.html' %}
+        {% endblock %}
+
+{% endfor %}
+
             <script src="{% static 'bootstrap/js/jquery-3.3.1.min.js' %}"></script>
             <script src="{% static 'bootstrap/js/popper.min.js' %}"></script>
 
@@ -48,6 +76,14 @@
          <script src="{% static 'bootstrap/js/main.js' %}"></script>
          <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
         <!-- Core theme JS-->
-
+<script>
+  window.onload = function () {
+    document.body.classList.add('loaded_hiding');
+    window.setTimeout(function () {
+      document.body.classList.add('loaded');
+      document.body.classList.remove('loaded_hiding');
+    }, 500);
+  }
+</script>
     </body>
 </html>
