@@ -2,6 +2,7 @@ from django import forms
 
 
 class ContactForm(forms.Form):
+    """Контактная форма"""
     name = forms.CharField(label='Ваше имя', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Введите имя'}))
     phone = forms.CharField(label='Номер Вашего телефона', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Введите номер телефона'}))
     email = forms.EmailField(label='Ваша электронная почта', widget=forms.TextInput(
@@ -10,6 +11,7 @@ class ContactForm(forms.Form):
 
 
 class OrderForm(forms.Form):
+    """Форма заявки"""
     name = forms.CharField(label='Ф. И. О',
                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Иванов Иван Иванович'}))
     phone = forms.CharField(label='Номер Вашего телефона:', widget=forms.TextInput(

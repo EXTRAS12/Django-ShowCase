@@ -5,14 +5,16 @@ from django.views.generic import DetailView, ListView
 
 from .forms import ContactForm, OrderForm
 from .models import Category, Product
+from .utils import MixinForm
 
 
-class Home(ListView):
+class Home(ListView, MixinForm):
+    """Главная страница"""
     template_name = 'base.html'
 
     def get(self, request, *args, **kwargs):
         categories = Category.objects.all()
-        products = Product.objects.all()
+        products = Product.objects.all().select_related('category')
         form = OrderForm(request.POST or None)
         context = {
             'categories': categories,
@@ -21,37 +23,14 @@ class Home(ListView):
         }
         return render(request, 'base.html', context)
 
-    def post(self, request, *args, **kwargs):
-        if request.method == 'POST':
-            form = OrderForm(request.POST)
-            if form.is_valid():
-                subject = "Новая заявка!"
-                body = {
-                    'name': form.cleaned_data['name'],
-                    'phone': form.cleaned_data['phone'],
-                    'area': form.cleaned_data['area'],
-                    'city': form.cleaned_data['city'],
-                    'adres': form.cleaned_data['adres'],
-                    'prodname': form.cleaned_data['prodname'],
-                }
-                message = "\n".join(body.values())
-                try:
-                    send_mail(subject, message,
-                              'info.moonshine@yandex.ru',
-                              ['intfloatwork@yandex.ru'])
-                except BadHeaderError:
-                    return HttpResponse('Найден некорректный заголовок')
-                return redirect("thanks")
-        form = OrderForm()
-        return render(request, "base.html", {'form': form})
 
-
-class CategoryByProducts(ListView):
-
+class CategoryByProducts(ListView, MixinForm):
+    """Страница товара по категориям"""
     def get(self, request, *args, **kwargs):
         form = OrderForm(request.POST or None)
         categories = Category.objects.all()
-        products = Product.objects.filter(category__slug=self.kwargs['slug'])
+        products = Product.objects.filter(category__slug=self.kwargs['slug'])\
+            .select_related('category')
         context = {
             'categories': categories,
             'products': products,
@@ -59,32 +38,9 @@ class CategoryByProducts(ListView):
         }
         return render(request, 'main/index.html', context)
 
-    def post(self, request, *args, **kwargs):
-        if request.method == 'POST':
-            form = OrderForm(request.POST)
-            if form.is_valid():
-                subject = "Новая заявка!"
-                body = {
-                    'name': form.cleaned_data['name'],
-                    'phone': form.cleaned_data['phone'],
-                    'area': form.cleaned_data['area'],
-                    'city': form.cleaned_data['city'],
-                    'adres': form.cleaned_data['adres'],
-                    'prodname': form.cleaned_data['prodname'],
-                }
-                message = "\n".join(body.values())
-                try:
-                    send_mail(subject, message,
-                              'info.moonshine@yandex.ru',
-                              ['intfloatwork@yandex.ru'])
-                except BadHeaderError:
-                    return HttpResponse('Найден некорректный заголовок')
-                return redirect("thanks")
-        form = OrderForm()
-        return render(request, "main/index.html", {'form': form})
 
-
-class ProductDetailView(DetailView):
+class ProductDetailView(DetailView, MixinForm):
+    """Страница конкретного товара"""
     form_class = OrderForm
     model = Product
     template_name = 'main/detail.html'
@@ -97,39 +53,17 @@ class ProductDetailView(DetailView):
         context['form'] = OrderForm
         return context
 
-    def post(self, request, *args, **kwargs):
-        if request.method == 'POST':
-            form = OrderForm(request.POST)
-            if form.is_valid():
-                subject = "Новая заявка!"
-                body = {
-                    'name': form.cleaned_data['name'],
-                    'phone': form.cleaned_data['phone'],
-                    'area': form.cleaned_data['area'],
-                    'city': form.cleaned_data['city'],
-                    'adres': form.cleaned_data['adres'],
-                    'prodname': form.cleaned_data['prodname'],
-                }
-                message = "\n".join(body.values())
-                try:
-                    send_mail(subject, message,
-                              'info.moonshine@yandex.ru',
-                              ['intfloatwork@yandex.ru'])
-                except BadHeaderError:
-                    return HttpResponse('Найден некорректный заголовок')
-                return redirect("thanks")
-        form = OrderForm()
-        return render(request, "main/detail.html", {'form': form})
 
-
-class Search(ListView):
+class Search(ListView, MixinForm):
+    """Страница поиска"""
     form_class = OrderForm
     model = Product
     template_name = 'main/search.html'
     context_object_name = 'products'
 
-    def get_queryset(self):  # новый
-        return Product.objects.filter(name__icontains=self.request.GET.get('s'))
+    def get_queryset(self):
+        return Product.objects.filter(name__icontains=self.request.GET.get('s'))\
+            .select_related('category')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(Search, self).get_context_data(**kwargs)
@@ -138,32 +72,9 @@ class Search(ListView):
         context['s'] = f"s={self.request.GET.get('s')}&"
         return context
 
-    def post(self, request, *args, **kwargs):
-        if request.method == 'POST':
-            form = OrderForm(request.POST)
-            if form.is_valid():
-                subject = "Новая заявка!"
-                body = {
-                    'name': form.cleaned_data['name'],
-                    'phone': form.cleaned_data['phone'],
-                    'area': form.cleaned_data['area'],
-                    'city': form.cleaned_data['city'],
-                    'adres': form.cleaned_data['adres'],
-                    'prodname': form.cleaned_data['prodname'],
-                }
-                message = "\n".join(body.values())
-                try:
-                    send_mail(subject, message,
-                              'info.moonshine@yandex.ru',
-                              ['intfloatwork@yandex.ru'])
-                except BadHeaderError:
-                    return HttpResponse('Найден некорректный заголовок')
-                return redirect("thanks")
-        form = OrderForm()
-        return render(request, "main/search.html", {'form': form})
-
 
 def contacts(request):
+    """Страница контакты"""
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
@@ -188,4 +99,5 @@ def contacts(request):
 
 
 def thanks(request):
+    """Страница спасибо"""
     return render(request, 'main/thanks.html')

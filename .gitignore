@@ -1,3 +1,5 @@
-db.sqlite3
-venv
 .idea
+venv
+django_cache
+media/
+db.sqlite3
